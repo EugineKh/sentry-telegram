@@ -105,7 +105,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
             },
         ]
 
-    def compile_message_text(self, message_template: str, message_params: dict, event_message: str) -> str:
+    def compile_message_text(self, message_template, message_params, event_message):
         """
         Compiles message text from template and event message.
         Truncates the original event message (`event.message`) to fit Telegram message length limit.
@@ -161,7 +161,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
             return []
         return list([line.strip().split('/', maxsplit=1) for line in receivers.splitlines() if line.strip()])
 
-    def send_message(self, url, payload, receiver: list[str, str]):
+    def send_message(self, url, payload, receiver):
         payload['chat_id'] = receiver[0]
         if len(receiver) > 1:
             payload['message_thread_id'] = receiver[1]
