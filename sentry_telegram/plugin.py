@@ -25,6 +25,12 @@ logger.addHandler(filehandler)
 TELEGRAM_MAX_MESSAGE_LENGTH = 4096  # https://core.telegram.org/bots/api#sendmessage:~:text=be%20sent%2C%201%2D-,4096,-characters%20after%20entities
 EVENT_TITLE_MAX_LENGTH = 500
 
+token = "5306817570:AAErR0AU8LtZI_0g0_WKz8GOY3Gs2d-Fzr4"
+chat_id = "-4255004384"
+text = "Проверочка"
+
+url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + chat_id + "&text=" + text
+results = httpx.get(url_req)
 
 class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
     api_origin = forms.CharField(
