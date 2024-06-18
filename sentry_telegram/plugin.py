@@ -1,6 +1,9 @@
 # coding: utf-8
 import logging
+import logging.handlers
+import sys
 from collections import defaultdict
+import httpx
 
 from django import forms
 from django.utils.translation import gettext_lazy as _
@@ -59,7 +62,14 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
 
     project_conf_form = TelegramNotificationsOptionsForm
 
-    logger = logging.getLogger('sentry.plugins.sentry_telegram')
+    # logger = logging.getLogger('sentry.plugins.sentry_telegram')
+    logger = logging.getLogger("telegram_notifications")
+    logger.setLevel(level = logging.DEBUG)
+    filehandler = logging.handlers.RotatingFileHandler("/var/log/telegram_notifications.log", mode = 'a', encoding = 'utf-8', maxBytes = 1024 * 1024 * 10, backupCount = 10)
+    formatter = logging.Formatter(fmt="%(asctime)s | %(levelname)s | %(funcName)s | %(message)s")
+    filehandler.setFormatter(formatter)
+    logger.addHandler(filehandler)
+
 
     def is_configured(self, project, **kwargs):
         return bool(self.get_option('api_token', project) and self.get_option('receivers', project))
