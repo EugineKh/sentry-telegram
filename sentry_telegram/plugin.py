@@ -182,12 +182,16 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         if len(receiver) > 1:
             payload['message_thread_id'] = receiver[1]
         logger.debug('Sending message to %s' % receiver)
-        response = httpx.get(url_req + str(payload))
-        # response = safe_urlopen(
-        #     method='POST',
-        #     url=url,
-        #     json=payload,
-        # )
+        try:
+            response = httpx.get(url_req + str(payload))
+            # response = safe_urlopen(
+            #     method='POST',
+            #     url=url,
+            #     json=payload,
+            # )
+        except Exception as e:
+            logger.error(f"send_message payload: {str(payload)}")
+            logger.error(f"send_message error: {e}")
         logger.debug(f"Response code: {response.status_code}")
         if response.status_code > 299:
             logger.error(f"Response code: {response.status_code}\nResponse text: {response.text}")
