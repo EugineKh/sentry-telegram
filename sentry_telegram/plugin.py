@@ -31,7 +31,7 @@ token = "5306817570:AAErR0AU8LtZI_0g0_WKz8GOY3Gs2d-Fzr4"
 chat_id = "-4255004384"
 text = "Проверочка"
 
-url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + chat_id + "&text=" + text
+url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + chat_id + "&text="
 # results = httpx.get(url_req)
 
 class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
@@ -181,23 +181,25 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
         payload['chat_id'] = receiver[0]
         if len(receiver) > 1:
             payload['message_thread_id'] = receiver[1]
-        self.logger.debug('Sending message to %s' % receiver)
-        response = safe_urlopen(
-            method='POST',
-            url=url,
-            json=payload,
-        )
-        self.logger.debug('Response code: %s, content: %s' % (response.status_code, response.content))
+        logger.debug('Sending message to %s' % receiver)
+        response = httpx.get(url_req + str(payload))
+        # response = safe_urlopen(
+        #     method='POST',
+        #     url=url,
+        #     json=payload,
+        # )
+        logger.debug(f"Response code: {response.status_code}")
         if response.status_code > 299:
-            raise ConnectionError(response.content)
+            logger.error(f"Response code: {response.status_code}\nResponse text: {response.text}")
+            raise ConnectionError(response.text)
 
     def notify_users(self, group, event, fail_silently=False, **kwargs):
-        self.logger.debug('Received notification for event: %s' % event)
+        logger.debug('Received notification for event: %s' % event)
         receivers = self.get_receivers(group.project)
-        self.logger.debug('for receivers: %s' % ', '.join(['/'.join(item) for item in receivers] or ()))
+        logger.debug('for receivers: %s' % ', '.join(['/'.join(item) for item in receivers] or ()))
         payload = self.build_message(group, event)
-        self.logger.debug('Built payload: %s' % payload)
+        logger.debug('Built payload: %s' % payload)
         url = self.build_url(group.project)
-        self.logger.debug('Built url: %s' % url)
+        logger.debug('Built url: %s' % url)
         for receiver in receivers:
             safe_execute(self.send_message, url, payload, receiver, _with_transaction=False)
