@@ -30,7 +30,7 @@ chat_id = "-4255004384"
 text = "Проверочка"
 
 url_req = "https://api.telegram.org/bot" + token + "/sendMessage" + "?chat_id=" + chat_id + "&text=" + text
-results = httpx.get(url_req)
+# results = httpx.get(url_req)
 
 class TelegramNotificationsOptionsForm(notify.NotificationConfigurationForm):
     api_origin = forms.CharField(
@@ -74,15 +74,6 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
     conf_title = title
 
     project_conf_form = TelegramNotificationsOptionsForm
-
-    # logger = logging.getLogger('sentry.plugins.sentry_telegram')
-    logger = logging.getLogger("telegram_notifications")
-    logger.setLevel(level = logging.DEBUG)
-    filehandler = logging.handlers.RotatingFileHandler("/var/log/telegram_notifications.log", mode = 'a', encoding = 'utf-8', maxBytes = 1024 * 1024 * 10, backupCount = 10)
-    formatter = logging.Formatter(fmt="%(asctime)s | %(levelname)s | %(funcName)s | %(message)s")
-    filehandler.setFormatter(formatter)
-    logger.addHandler(filehandler)
-
 
     def is_configured(self, project, **kwargs):
         return bool(self.get_option('api_token', project) and self.get_option('receivers', project))
