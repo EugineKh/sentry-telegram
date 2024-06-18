@@ -22,6 +22,8 @@ formatter = logging.Formatter(fmt="%(asctime)s | %(levelname)s | %(funcName)s | 
 filehandler.setFormatter(formatter)
 logger.addHandler(filehandler)
 
+logger.debug("Запустился плагин")
+
 TELEGRAM_MAX_MESSAGE_LENGTH = 4096  # https://core.telegram.org/bots/api#sendmessage:~:text=be%20sent%2C%201%2D-,4096,-characters%20after%20entities
 EVENT_TITLE_MAX_LENGTH = 500
 
