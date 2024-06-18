@@ -15,6 +15,13 @@ from sentry.utils.safe import safe_execute
 from . import __version__, __doc__ as package_doc
 
 
+logger = logging.getLogger("telegram_notifications")
+logger.setLevel(level = logging.DEBUG)
+filehandler = logging.handlers.RotatingFileHandler("/var/log/telegram_notifications.log", mode = 'a', encoding = 'utf-8', maxBytes = 1024 * 1024 * 10, backupCount = 10)
+formatter = logging.Formatter(fmt="%(asctime)s | %(levelname)s | %(funcName)s | %(message)s")
+filehandler.setFormatter(formatter)
+logger.addHandler(filehandler)
+
 TELEGRAM_MAX_MESSAGE_LENGTH = 4096  # https://core.telegram.org/bots/api#sendmessage:~:text=be%20sent%2C%201%2D-,4096,-characters%20after%20entities
 EVENT_TITLE_MAX_LENGTH = 500
 
