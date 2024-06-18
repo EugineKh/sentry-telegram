@@ -191,6 +191,7 @@ class TelegramNotificationsPlugin(notify.NotificationPlugin):
             # )
         except Exception as e:
             logger.error(f"send_message payload: {str(payload)}")
+            logger.error(f"send_message url: {str(url)}")
             logger.error(f"send_message error: {e}")
         logger.debug(f"Response code: {response.status_code}")
         if response.status_code > 299:
